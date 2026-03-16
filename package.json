@@ -1,0 +1,22 @@
+{
+  "name": "nvimmcp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaydenYip3/NeoVimMCP.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JaydenYip3/NeoVimMCP/issues"
+  },
+  "homepage": "https://github.com/JaydenYip3/NeoVimMCP#readme"
+}

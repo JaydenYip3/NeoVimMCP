@@ -1,15 +1,15 @@
 # NeoVimMCP
 
-Minimal MCP server that tracks Neovim buffer content and exposes it to MCP clients.
+MCP server that receives Neovim buffer updates and exposes editor context as MCP tools.
 
-## What it does
+## Features
 
-- Runs an MCP server over stdio
-- Runs a local HTTP listener for Neovim buffer updates
-- Stores latest buffers in memory
-- Exposes tools to get active buffer, lookup a buffer, list buffers, and publish updates
+- MCP server over stdio for AI clients
+- HTTP bridge endpoint Neovim can POST to
+- In-memory buffer store with active buffer tracking
+- Tools for active buffer, list/lookup, cursor context, publish, and clear
 
-## Run
+## Start server
 
 ```bash
 npm install
@@ -18,11 +18,11 @@ npm start
 
 Optional env var:
 
-- `NVIM_BUFFER_PORT` (default: `4389`)
+- `NVIM_BUFFER_PORT` (default `4389`)
 
-## HTTP listener (from Neovim)
+## HTTP endpoints (Neovim -> server)
 
-Base URL: `http://127.0.0.1:4389`
+Base URL: `http://127.0.0.1:${NVIM_BUFFER_PORT:-4389}`
 
 - `GET /health`
 - `GET /buffer/list`
@@ -43,9 +43,48 @@ curl -X POST http://127.0.0.1:4389/buffer/update \
   }'
 ```
 
-## MCP tools
+## MCP tools exposed
 
 - `nvim_get_active_buffer`
-- `nvim_get_buffer`
 - `nvim_list_buffers`
+- `nvim_get_buffer`
+- `nvim_get_cursor_context`
 - `nvim_publish_buffer`
+- `nvim_clear_buffer`
+
+## Connect your MCP client
+
+Example `mcpServers` entry:
+
+```json
+{
+  "mcpServers": {
+    "nvim": {
+      "command": "node",
+      "args": ["/absolute/path/to/nvimMCP/server.js"],
+      "env": {
+        "NVIM_BUFFER_PORT": "4389"
+      }
+    }
+  }
+}
+```
+
+## Connect Neovim
+
+Drop `nvim/nvim-mcp.lua` into your config (or source it directly), then call setup:
+
+```lua
+local nvim_mcp = dofile("/absolute/path/to/nvimMCP/nvim/nvim-mcp.lua")
+
+nvim_mcp.setup({
+  endpoint = "http://127.0.0.1:4389/buffer/update",
+  clear_endpoint = "http://127.0.0.1:4389/buffer/clear",
+  debounce_ms = 150,
+})
+```
+
+Available user commands:
+
+- `:NvimMcpPublish` (force publish current buffer)
+- `:NvimMcpClear` (clear current buffer from server)

@@ -63,7 +63,7 @@ Example `mcpServers` entry:
       "command": "node",
       "args": ["/absolute/path/to/nvimMCP/server.js"],
       "env": {
-        "NVIM_BUFFER_PORT": "4389"
+        "NVIM": "/tmp/nvim.sock (Neovim socket)"
       }
     }
   }

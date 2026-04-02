@@ -20,19 +20,6 @@ Optional env var:
 
 - `NVIM_BUFFER_PORT` (default `4389`)
 
-Example publish call:
-
-```bash
-curl -X POST http://127.0.0.1:4389/buffer/update \
-  -H 'content-type: application/json' \
-  -d '{
-    "bufnr": 1,
-    "filePath": "/tmp/example.js",
-    "filetype": "javascript",
-    "cursorLine": 12,
-    "content": "console.log(\"hello\")"
-  }'
-```
 
 ## MCP tools exposed
 
